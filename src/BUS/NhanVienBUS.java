@@ -358,10 +358,11 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     } else {
                         gt = 0;
                     }
-                    String sdt = excelRow.getCell(3).getStringCellValue();
                     Date ngaysinh = (Date) excelRow.getCell(2).getDateCellValue();
-                    java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
+                    String sdt = excelRow.getCell(3).getStringCellValue();
                     String email = excelRow.getCell(4).getStringCellValue();
+                    java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
+
                     if (Validation.isEmpty(tennv) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt)
                             || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
@@ -373,16 +374,17 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     } else {
                         NhanVienDTO nvdto = new NhanVienDTO(id, tennv, gt, birth, sdt, 1, email);
                         NhanVienDAO.getInstance().insert(nvdto);
+                        this.listNv.add(nvdto);
+                        nv.loadDataTalbe(listNv);
                     }
-                    JOptionPane.showMessageDialog(null, "Nhập thành công");
                 }
 
-            } catch (FileNotFoundException ex) {
-                System.out.println("Lỗi đọc file");
-            } catch (IOException ex) {
-                System.out.println("Lỗi đọc file");
+            } catch (IOException | IllegalStateException e) {
+                JOptionPane.showMessageDialog(null, "Nhập thất bại", "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
         }
+        JOptionPane.showMessageDialog(null, "Nhập thành công");
         if (k != 0) {
             JOptionPane.showMessageDialog(null, "Những dữ liệu không chuẩn không được thêm vào");
         }

@@ -16,6 +16,8 @@ import GUI.Main;
 import GUI.Component.IntegratedSearch;
 import GUI.Component.MainFunction;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.itemTaskbar;
 import GUI.Dialog.KhuVucKhoDialog;
@@ -175,6 +177,8 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
         XSSFWorkbook excelJTableImport = null;
         ArrayList<KhuVucKhoDTO> listExcel = new ArrayList<KhuVucKhoDTO>();
         JFileChooser jf = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel file .xlsx", "xlsx");
+        jf.setFileFilter(filter);
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
         Workbook workbook = null;
@@ -194,11 +198,11 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
                     tblModel.setRowCount(0);
                     loadDataTable(listKVK);
                 }
-                JOptionPane.showMessageDialog(this, "Nhập thành công");
-            } catch (FileNotFoundException ex) {
-                System.out.println("Lỗi đọc file");
+                JOptionPane.showMessageDialog(this, "Nhập thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
-                System.out.println("Lỗi đọc file");
+                JOptionPane.showMessageDialog(this, "Không thể mở file", "Lỗi mở file", JOptionPane.ERROR_MESSAGE);
+            } catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Định dạng dữ liệu trong file không đúng", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
             }
         }
 

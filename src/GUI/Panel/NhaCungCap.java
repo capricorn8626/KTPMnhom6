@@ -9,6 +9,8 @@ import GUI.Component.MainFunction;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import GUI.Component.PanelBorderRadius;
 import GUI.Main;
 import helper.JTableExporter;
@@ -172,6 +174,8 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         XSSFWorkbook excelJTableImport = null;
         ArrayList<DTO.NhaCungCapDTO> listExcel = new ArrayList<DTO.NhaCungCapDTO>();
         JFileChooser jf = new JFileChooser();
+        jf.setDialogTitle("Select file");
+        jf.setFileFilter(new FileNameExtensionFilter("Excel file", "xlsx"));
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
         Workbook workbook = null;
@@ -190,10 +194,10 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     String tenNCC = excelRow.getCell(0).getStringCellValue();
                     String diachi = excelRow.getCell(1).getStringCellValue();
                     String email = excelRow.getCell(2).getStringCellValue();
-                    String sdt = excelRow.getCell(3).getStringCellValue();
+                    String sdt = excelRow.getCell(3).getStringCellValue();  
                     if (Validation.isEmpty(tenNCC) || Validation.isEmpty(email)
                             || !Validation.isEmail(email) || Validation.isEmpty(sdt) || !isPhoneNumber(sdt)
-                            || sdt.length() != 10 || Validation.isEmpty(diachi)) {
+                            || Validation.isEmpty(diachi)) {
                         check = 0;
                     }
                     if (check == 0) {
@@ -203,14 +207,14 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
                     }
                 }
                 if (k != 0) {
-                    JOptionPane.showMessageDialog(this, "Những dữ liệu không chuẩn không được thêm vào");
+                    JOptionPane.showMessageDialog(this, k+" dữ liệu không chuẩn không được thêm vào");
                 } else {
                     JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công");
                 }
-            } catch (FileNotFoundException ex) {
-                System.out.println("Lỗi đọc file");
             } catch (IOException ex) {
-                System.out.println("Lỗi đọc file");
+                JOptionPane.showMessageDialog(this, "Nhập dữ liệu thất bại", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalStateException e) {
+                JOptionPane.showMessageDialog(this, "Lỗi kiểu dữ liệu trong file excel", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -270,7 +274,7 @@ public final class NhaCungCap extends JPanel implements ActionListener, ItemList
         str = str.replaceAll("\\s+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");
 
         // Kiểm tra xem chuỗi có phải là một số điện thoại hợp lệ hay không
-        if (str.matches("\\d{10}")) { // Kiểm tra số điện thoại 10 chữ số
+        if (str.matches("\\d{10,11}")) { // Kiểm tra số điện thoại 10 chữ số
             return true;
         } else if (str.matches("\\d{3}-\\d{3}-\\d{4}")) { // Kiểm tra số điện thoại có dấu gạch ngang
             return true;

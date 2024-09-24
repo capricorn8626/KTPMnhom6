@@ -9,6 +9,8 @@ import GUI.Component.MainFunction;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import GUI.Component.PanelBorderRadius;
 import GUI.Component.TableSorter;
 import GUI.Dialog.KhachHangDialog;
@@ -179,6 +181,8 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
         XSSFWorkbook excelJTableImport = null;
         ArrayList<KhachHangDTO> listExcel = new ArrayList<KhachHangDTO>();
         JFileChooser jf = new JFileChooser();
+        jf.setDialogTitle("Select file");
+        jf.setFileFilter(new FileNameExtensionFilter("Excel file .xlsx", "xlsx"));
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
         Workbook workbook = null;
@@ -208,14 +212,14 @@ public class KhachHang extends JPanel implements ActionListener, ItemListener {
                     }
                 }
                 JOptionPane.showMessageDialog(this, "Nhập thành công");
-            } catch (FileNotFoundException ex) {
-                System.out.println("Lỗi đọc file");
             } catch (IOException ex) {
                 System.out.println("Lỗi đọc file");
+            } catch (IllegalStateException ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi định dạng dữ liệu trong file", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
             }
         }
         if (k != 0) {
-            JOptionPane.showMessageDialog(this, "Những dữ liệu không hợp lệ không được thêm vào");
+            JOptionPane.showMessageDialog(this, k+" dữ liệu không hợp lệ không được thêm vào, xem lại định dạng dữ liệu trong file", "Lỗi dữ liệu", JOptionPane.ERROR_MESSAGE);
         }
         loadDataTable(listkh);
     }

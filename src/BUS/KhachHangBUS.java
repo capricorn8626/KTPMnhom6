@@ -3,6 +3,7 @@ package BUS;
 import DAO.KhachHangDAO;
 import DTO.KhachHangDTO;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class KhachHangBUS {
 
@@ -37,6 +38,7 @@ public class KhachHangBUS {
     public Boolean add(KhachHangDTO kh) {
         boolean check = khDAO.insert(kh) != 0;
         if (check) {
+            kh.setNgaythamgia(new java.sql.Date(new Date().getTime()));
             this.listKhachHang.add(kh);
         }
         return check;

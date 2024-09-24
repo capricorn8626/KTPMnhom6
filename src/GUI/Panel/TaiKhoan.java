@@ -14,6 +14,8 @@ import GUI.Component.MainFunction;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import GUI.Component.PanelBorderRadius;
 import GUI.Dialog.ListNhanVien;
 import GUI.Dialog.TaiKhoanDialog;
@@ -226,6 +228,8 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         BufferedInputStream excelBIS = null;
         XSSFWorkbook excelJTableImport = null;
         JFileChooser jf = new JFileChooser();
+        jf.setDialogTitle("Select file");
+        jf.setFileFilter(new FileNameExtensionFilter("Excel file .xlsx", "xlsx"));
         int result = jf.showOpenDialog(null);
         jf.setDialogTitle("Open file");
         Workbook workbook = null;
@@ -239,8 +243,8 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                 XSSFSheet excelSheet = excelJTableImport.getSheetAt(0);
                 for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
                     XSSFRow excelRow = excelSheet.getRow(row);
-                    Cell cell0=excelRow.getCell(0);
-                    int manv = (int)excelRow.getCell(0).getNumericCellValue();
+                    Cell cell0 = excelRow.getCell(0);
+                    int manv = (int) excelRow.getCell(0).getNumericCellValue();
                     String tendangnhap = excelRow.getCell(1).getStringCellValue();
                     String matkhau = excelRow.getCell(2).getStringCellValue();
                     String nhomquyen = excelRow.getCell(3).getStringCellValue();
@@ -293,16 +297,14 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                         listTk.add(newaccount);
                     }
                 }
-            } catch (FileNotFoundException ex) {
-                System.out.println("Lỗi đọc file");
-            } catch (IOException ex) {
-                System.out.println("Lỗi đọc file");
+                JOptionPane.showMessageDialog(this, "Nhập thành công, những dữ liệu không chuẩn không được thêm vào", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Lỗi file không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException | IllegalStateException e) {
+                JOptionPane.showMessageDialog(this, "Nhập dữ liệu thất bại do dữ liệu sai định dạng!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
             }
-        }
-        if (k != 0) {
-            JOptionPane.showMessageDialog(this, "Những dữ liệu không chuẩn không được thêm vào");
-        } else {
-            JOptionPane.showMessageDialog(this, "Nhập dữ liệu thành công");
         }
 
         loadTable(listTk);
