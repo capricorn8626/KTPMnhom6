@@ -89,8 +89,60 @@ public class SanPhamBUS {
         text = text.toLowerCase();
         ArrayList<SanPhamDTO> result = new ArrayList<>();
         for (SanPhamDTO i : this.listSP) {
-            if (Integer.toString(i.getMasp()).toLowerCase().contains(text) || i.getTensp().toLowerCase().contains(text)) {
+            if (Integer.toString(i.getMasp()).toLowerCase().contains(text)
+                    || i.getTensp().toLowerCase().contains(text)) {
                 result.add(i);
+            }
+        }
+        return result;
+    }
+    
+    public ArrayList<SanPhamDTO> search(String field, String text) {
+        text = text.toLowerCase();
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        ThuongHieuBUS thuongHieuBUS = new ThuongHieuBUS();
+        HeDieuHanhBUS heDieuHanhBUS = new HeDieuHanhBUS();
+        XuatXuBUS xuatXuBUS = new XuatXuBUS();
+        KhuVucKhoBUS khuVucKhoBUS = new KhuVucKhoBUS();
+        // {"Mã sản phẩm", "Tên sản phẩm", "Thương hiệu", "Hệ điều hành", "Xuất xứ", "Kho hàng"}
+        for (SanPhamDTO i : this.listSP) {
+            String masp = Integer.toString(i.getMasp()).toLowerCase();
+            String tensp = i.getTensp().toLowerCase();
+            String thuonghieu = thuongHieuBUS.getTenThuongHieu(i.getThuonghieu()).toLowerCase();
+            String hedieuhanh = heDieuHanhBUS.getTenHdh(i.getHedieuhanh()).toLowerCase();
+            String xuatxu = xuatXuBUS.getTenXuatXu(i.getXuatxu()).toLowerCase();
+            String khohang = khuVucKhoBUS.getTenKhuVuc(i.getKhuvuckho()).toLowerCase();
+            switch (field) {
+                case "Mã sản phẩm":
+                    if (masp.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
+                case "Tên sản phẩm":
+                    if (tensp.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
+                case "Thương hiệu":
+                    if (thuonghieu.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
+                case "Hệ điều hành":
+                    if (hedieuhanh.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
+                case "Xuất xứ":
+                    if (xuatxu.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
+                case "Kho hàng":
+                    if (khohang.contains(text)) {
+                        result.add(i);
+                    }
+                    break;
             }
         }
         return result;

@@ -85,6 +85,7 @@ public final class KhuVucKhoDialog extends JDialog implements ActionListener {
             case "create" -> pnbottom.add(btnThem);
             case "update" -> {
                 pnbottom.add(btnCapNhat);
+                tenkhuvuc.setEditable(false);
                 initInfo();
             }
             default -> throw new AssertionError();
@@ -116,6 +117,10 @@ public final class KhuVucKhoDialog extends JDialog implements ActionListener {
             int makhuvuc = KhuVucKhoDAO.getInstance().getAutoIncrement();
             String tenkhuvuc = this.tenkhuvuc.getText();
             String ghichu = this.ghichu.getText();
+            if(jpkvk.kvkBUS.checkExistName(tenkhuvuc)){
+                JOptionPane.showMessageDialog(this, "Tên khu vực kho đã tồn tại", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             jpkvk.kvkBUS.add(new KhuVucKhoDTO(makhuvuc, tenkhuvuc, ghichu));
             jpkvk.loadDataTable(jpkvk.listKVK);
             dispose();

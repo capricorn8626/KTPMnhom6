@@ -121,4 +121,13 @@ public class KhuVucKhoBUS {
     public String getTenKhuVuc(int makhuvuc) {
         return this.listKVK.get(this.getIndexByMaKVK(makhuvuc)).getTenkhuvuc();
     }
+
+    public boolean checkExistName(String tenkhuvuc) {
+        for (KhuVucKhoDTO i : listKVK) {
+            if (i.getTenkhuvuc().toLowerCase().equals(tenkhuvuc.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -89,12 +89,35 @@ public final class SanPham extends JPanel implements ActionListener {
         }
         functionBar.add(mainFunction);
 
-        search = new IntegratedSearch(new String[]{"Tất cả"});
+        search = new IntegratedSearch(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Thương hiệu", "Hệ điều hành", "Xuất xứ", "Kho hàng"});
         search.txtSearchForm.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                String txt = search.txtSearchForm.getText();
-                listSP = spBUS.search(txt);
+                String txt = search.txtSearchForm.getText().trim();
+                String field = search.cbxChoose.getModel().getSelectedItem().toString();
+                switch(field){
+                    case "Mã sản phẩm":
+                        listSP = spBUS.search("Mã sản phẩm", txt);
+                        break;
+                    case "Tên sản phẩm":
+                        listSP = spBUS.search("Tên sản phẩm", txt);
+                        break;
+                    case "Thương hiệu":
+                        listSP = spBUS.search("Thương hiệu", txt);
+                        break;
+                    case "Hệ điều hành":
+                        listSP = spBUS.search("Hệ điều hành", txt);
+                        break;
+                    case "Xuất xứ":
+                        listSP = spBUS.search("Xuất xứ", txt);
+                        break;
+                    case "Kho hàng":
+                        listSP = spBUS.search("Kho hàng", txt);
+                        break;
+                    default:
+                        listSP = spBUS.getAll();
+                        break;
+                }
                 loadDataTalbe(listSP);
             }
 

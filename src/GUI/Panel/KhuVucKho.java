@@ -201,30 +201,26 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
                 JOptionPane.showMessageDialog(this, "Nhập thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Không thể mở file", "Lỗi mở file", JOptionPane.ERROR_MESSAGE);
-            } catch(Exception ex) {
-                JOptionPane.showMessageDialog(this, "Định dạng dữ liệu trong file không đúng", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Định dạng dữ liệu trong file không đúng", "Lỗi định dạng",
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
 
         loadDataTable(listKVK);
     }
+    
+    public void exportExcel() {
+        int row = getRowSelected();
+        if(row == -1) return;
+        try {
+            JTableExporter.exportKhuVucKho(tblModel.getValueAt(row, 1).toString(), listSP);
+            JOptionPane.showMessageDialog(this, "Xuất file thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Không thể xuất file", "Lỗi xuất file", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-//    void Import() throws IOException, SQLException, Exception{
-//        File excelFile;
-//        FileInputStream excelFIS = null;
-//        BufferedInputStream excelBIS = null;
-//        XSSFWorkbook excelJTableImport = null;
-//        ArrayList<KhuVucKhoDTO> listExcel = new ArrayList<KhuVucKhoDTO>();
-//        JFileChooser jf = new JFileChooser();
-//        int result = jf.showOpenDialog(null);
-//        jf.setDialogTitle("Open file");
-//        Workbook workbook = null;
-//        if (result == JFileChooser.APPROVE_OPTION) {
-//            excelFile = jf.getSelectedFile();
-//            ArrayList<KhuVucKhoDTO> excel = ExcelImport.readDataFromExcel(excelFile, KhuVucKhoDTO.class);
-//            System.out.println(excel.size());
-//        }
-//    }
     public void ListCustomersInDePot(ArrayList<SanPhamDTO> result) {
         right.removeAll();
         JLabel tit = new JLabel("Danh sách sản phẩm đang có ở khu vực");
@@ -301,11 +297,8 @@ public class KhuVucKho extends JPanel implements ActionListener, ItemListener {
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
         } else if (e.getSource() == mainFunction.btn.get("export")) {
-            try {
-                JTableExporter.exportJTableToExcel(tableKhuvuc);
-            } catch (IOException ex) {
-                Logger.getLogger(KhuVucKho.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            // JTableExporter.exportJTableToExcel(tableKhuvuc);
+            exportExcel();
         }
     }
 

@@ -22,7 +22,7 @@ public class IntegratedSearch extends JPanel {
         JPanel jpSearch = new JPanel(new BorderLayout(5,10));
         jpSearch.setBorder(new EmptyBorder(18,15,18,15));
         jpSearch.setBackground(Color.white);
-        cbxChoose = new JComboBox();
+        cbxChoose = new JComboBox<>();
         cbxChoose.setModel(new DefaultComboBoxModel<>(str));
         cbxChoose.setPreferredSize(new Dimension(140, 0));
         cbxChoose.setFont(new java.awt.Font(FlatRobotoFont.FAMILY, 0, 13));

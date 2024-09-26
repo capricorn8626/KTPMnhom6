@@ -153,7 +153,7 @@ public class writePDF {
             PdfWriter writer = PdfWriter.getInstance(document, file);
             document.open();
 
-            Paragraph company = new Paragraph("Hệ thống quản lý điện thoại AnBaoChSi", fontBold15);
+            Paragraph company = new Paragraph("Hệ thống quản lý điện thoại 5T", fontBold15);
             company.add(new Chunk(createWhiteSpace(20)));
             Date today = new Date(System.currentTimeMillis());
             company.add(new Chunk("Thời gian in phiếu: " + formatDate.format(today), fontNormal10));

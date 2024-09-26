@@ -319,7 +319,7 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
         content_btn.setBorder(new EmptyBorder(8, 5, 0, 10));
         content_btn.setOpaque(false);
         btnAddSp = new ButtonCustom("Thêm sản phẩm", "success", 14);
-        btnEditSP = new ButtonCustom("Sửa sản phẩm", "warning", 14);
+        btnEditSP = new ButtonCustom("Lưu thay đổi", "warning", 14);
         btnDelete = new ButtonCustom("Xoá sản phẩm", "danger", 14);
         btnImport = new ButtonCustom("Nhập Excel", "excel", 14);
         btnAddSp.addActionListener(this);
@@ -493,8 +493,8 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
                 JOptionPane.showMessageDialog(this, "Mã imei bắt đầu không được để rỗng và phải là 15 ký tự số !", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
-            if (Validation.isEmpty(txtSoLuongImei.getText()) || !Validation.isNumber(txtSoLuongImei.getText())) {
-                JOptionPane.showMessageDialog(this, "Số lượng không được để rỗng và phải là số!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
+            if (Validation.isEmpty(txtSoLuongImei.getText()) || !Validation.isNumber(txtSoLuongImei.getText()) || Integer.parseInt(txtSoLuongImei.getText()) <= 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng không được để rỗng và phải là số lớn hơn 0!", "Cảnh báo !", JOptionPane.WARNING_MESSAGE);
                 return false;
             }
         } else if (phuongthuc == 1) {
@@ -640,12 +640,16 @@ public final class TaoPhieuNhap extends JPanel implements ItemListener, ActionLi
             loadDataTableChiTietPhieu(chitietphieu);
             resetForm();
         } else if (source == btnEditSP) {
+            if(validateNhap() == false){
+                return;
+            }
             int mapb = ch.get(cbxCauhinh.cbb.getSelectedIndex()).getMaphienbansp();
             chitietsanpham.remove(mapb);
             ArrayList<ChiTietSanPhamDTO> ctsp = getChiTietSanPham();
             chitietsanpham.put(mapb, ctsp);
             int ptnhap = cbxPtNhap.getSelectedIndex();
             chitietphieu.get(rowPhieuSelect).setPhuongthucnnhap(ptnhap);
+            chitietphieu.get(rowPhieuSelect).setDongia(Integer.parseInt(txtDongia.getText()));
             chitietphieu.get(rowPhieuSelect).setSoluong(ctsp.size());
             loadDataTableChiTietPhieu(chitietphieu);
         } else if (source == btnNhapHang) {

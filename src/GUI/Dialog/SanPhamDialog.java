@@ -217,7 +217,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         txtgianhap.setEditable(false);
         txtgiaxuat.setEditable(false);
         if(btnAddCauHinhEdit != null && btnEditCTCauHinhEdit != null && btnDeleteCauHinhEdit != null && btnResetCauHinhEdit != null){
-            btnAddCauHinhEdit.setEnabled(isCreating);
+            btnAddCauHinhEdit.setEnabled(true);
             btnEditCTCauHinhEdit.setEnabled(isCreating);
             btnDeleteCauHinhEdit.setEnabled(isCreating);
             btnResetCauHinhEdit.setEnabled(isCreating);
@@ -429,14 +429,16 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
             SanPhamDAO.getInstance().update(sp);
             this.jpSP.spBUS.update(snNew);
             this.jpSP.loadDataTalbe(this.jpSP.spBUS.getAll());
-            int input = JOptionPane.showConfirmDialog(this, 
-                "Bạn có muốn chỉnh sửa chi tiết sản phẩm?", "Chỉnh sửa chi tiết", 
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            // 0=ok, 2=cancel
-            if(input == 0){
-                CardLayout c = (CardLayout) pnmain.getLayout();
-                c.next(pnmain);
-            }
+            JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công !");
+            this.dispose();
+            // int input = JOptionPane.showConfirmDialog(this, 
+            //     "Bạn có muốn chỉnh sửa chi tiết sản phẩm?", "Chỉnh sửa chi tiết", 
+            //     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            // // 0=ok, 2=cancel
+            // if(input == 0){
+            //     CardLayout c = (CardLayout) pnmain.getLayout();
+            //     c.next(pnmain);
+            // }
         }
         if(source == btnEditCTCauHinhEdit){
             if (validateCardTwo()) {
@@ -546,7 +548,7 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         thoigianbaohanh.setText(Integer.toString(sp.getThoigianbaohanh()));
         phienbanhdh.setText(Integer.toString(sp.getPhienbanhdh()));
         thuonghieu.setSelectedIndex(thuonghieuBus.getIndexByMaLH(sp.getThuonghieu()));
-        khuvuc.setSelectedIndex(jpSP.spBUS.getIndexByMaSP(sp.getKhuvuckho()));
+        khuvuc.setSelectedItem(kvkhoBus.getTenKhuVuc(sp.getKhuvuckho()));
     }
 
     public PhienBanSanPhamDTO getCauHinh() {
@@ -622,8 +624,8 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
         cbxMausac.setSelectedIndex(0);
         cbxRam.setSelectedIndex(0);
         cbxRom.setSelectedIndex(0);
-        txtgianhap.setText("");
-        txtgiaxuat.setText("");
+        txtgianhap.setText("0");
+        txtgiaxuat.setText("0");
     }
 
     public void setInfoCauHinh(PhienBanSanPhamDTO ch) {
