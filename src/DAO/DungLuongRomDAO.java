@@ -49,7 +49,7 @@ public class DungLuongRomDAO implements DAOinterface<DungLuongRomDTO> {
             String sql = "UPDATE `dungluongrom` SET `kichthuocrom`=? WHERE `madlrom`=?";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             pst.setInt(1, t.getDungluongrom());
-            pst.setInt(2, t.getDungluongrom());
+            pst.setInt(2, t.getMadungluongrom());
             result = pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {
@@ -109,6 +109,24 @@ public class DungLuongRomDAO implements DAOinterface<DungLuongRomDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
+        }
+        return result;
+    }
+
+    public boolean checkDup(int kichthuoc) {
+        boolean result = true;
+        try {
+            Connection con = (Connection) JDBCUtil.getConnection();
+            String sql = "SELECT * FROM dungluongrom WHERE kichthuocrom = ? AND trangthai = 1";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            pst.setInt(1, kichthuoc);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            if (rs.isBeforeFirst()) {
+                result = false;
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(DungLuongRomDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }

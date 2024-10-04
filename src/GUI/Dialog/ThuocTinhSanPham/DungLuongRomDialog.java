@@ -94,7 +94,7 @@ public class DungLuongRomDialog extends JDialog implements MouseListener {
         table.addMouseListener(this);
         scrollTable = new JScrollPane(table);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã Rom", "Dung lượng"};
+        String[] header = new String[] { "Mã Rom", "Dung lượng" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -112,6 +112,7 @@ public class DungLuongRomDialog extends JDialog implements MouseListener {
         del = new ButtonCustom("Xóa", "danger", 15, 100, 40);
         del.addMouseListener(this);
         update = new ButtonCustom("Sửa", "success", 15, 100, 40);
+        update.addMouseListener(this);
         bottom.setBackground(Color.white);
         bottom.setLayout(new FlowLayout(1, 20, 20));
         bottom.add(add);
@@ -128,8 +129,8 @@ public class DungLuongRomDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<DungLuongRomDTO> result) {
         tblModel.setRowCount(0);
         for (DungLuongRomDTO dlr : result) {
-            tblModel.addRow(new Object[]{
-                dlr.getMadungluongrom(), dlr.getDungluongrom()
+            tblModel.addRow(new Object[] {
+                    dlr.getMadungluongrom(), dlr.getDungluongrom()
             });
         }
     }
@@ -140,38 +141,54 @@ public class DungLuongRomDialog extends JDialog implements MouseListener {
             if (Validation.isEmpty(ms.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập dung lượng Rom mới");
             } else {
-                int kichthuoc = Integer.parseInt(ms.getText());
-                if (dlrBUS.checkDup(kichthuoc)) {
-                    int id = DungLuongRomDAO.getInstance().getAutoIncrement();
-                    dlrBUS.add(new DungLuongRomDTO(id, kichthuoc));
-                    loadDataTable(list);
-                    ms.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Dung lượng ROM đã tồn tại !");
+                try {
+                    int kichthuoc = Integer.parseInt(ms.getText());
+                    if (dlrBUS.checkDup(kichthuoc)) {
+                        int id = DungLuongRomDAO.getInstance().getAutoIncrement();
+                        dlrBUS.add(new DungLuongRomDTO(id, kichthuoc));
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm dung lượng ROM thành công !");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Dung lượng ROM đã tồn tại !");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Dung lượng ROM phải là số nguyên!");
+                    ex.printStackTrace();
                 }
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                dlrBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    dlrBUS.delete(list.get(index), index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa dung lượng ROM thành công !");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
             if (index != -1) {
-                if (e.getSource() == add) {
-                    if (Validation.isEmpty(ms.getText())) {
-                        JOptionPane.showMessageDialog(this, "Vui lòng nhập dung lượng Rom");
-                    } else {
+                if (Validation.isEmpty(ms.getText())) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập dung lượng Rom");
+                } else {
+                    try {
                         int kichthuoc = Integer.parseInt(ms.getText());
                         if (dlrBUS.checkDup(kichthuoc)) {
                             dlrBUS.update(new DungLuongRomDTO(list.get(index).getMadungluongrom(), kichthuoc));
                             loadDataTable(list);
                             ms.setText("");
+                            JOptionPane.showMessageDialog(this, "Sửa dung lượng ROM thành công !");
                         } else {
-                            JOptionPane.showMessageDialog(this, "Dung lượng ROM đã tồn tại !");
+                            JOptionPane.showMessageDialog(this, "Dung lượng ROM đã tồn tại hoặc không thay đổi!");
                         }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Dung lượng ROM phải là số nguyên!");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -191,21 +208,29 @@ public class DungLuongRomDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -154,10 +154,8 @@ public class NhanVienDialog extends JDialog {
                         try {
                             int txt_gender = -1;
                             if (male.isSelected()) {
-                                System.out.println("Nam");
                                 txt_gender = 1;
                             } else if (female.isSelected()) {
-                                System.out.println("Nữ");
                                 txt_gender = 0;
                             }
                             int manv = NhanVienDAO.getInstance().getAutoIncrement();

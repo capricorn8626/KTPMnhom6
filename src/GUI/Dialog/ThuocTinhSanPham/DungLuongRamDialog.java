@@ -94,7 +94,7 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
         table.addMouseListener(this);
         scrollTable = new JScrollPane(table);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã Ram", "Dung lượng"};
+        String[] header = new String[] { "Mã Ram", "Dung lượng" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -129,8 +129,8 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<DungLuongRamDTO> result) {
         tblModel.setRowCount(0);
         for (DungLuongRamDTO dlr : result) {
-            tblModel.addRow(new Object[]{
-                dlr.getMadlram(), dlr.getDungluongram()
+            tblModel.addRow(new Object[] {
+                    dlr.getMadlram(), dlr.getDungluongram()
             });
         }
     }
@@ -141,22 +141,36 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
             if (Validation.isEmpty(ms.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập dung lượng Ram mới");
             } else {
+
                 int id = DungLuongRamDAO.getInstance().getAutoIncrement();
                 int kichthuoc = Integer.parseInt(ms.getText());
                 if (dlrBUS.checkDup(kichthuoc)) {
-                    dlrBUS.add(new DungLuongRamDTO(id, kichthuoc));
-                    loadDataTable(list);
-                    ms.setText("");
+                    try {
+                        dlrBUS.add(new DungLuongRamDTO(id, kichthuoc));
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm dung lượng ram thành công");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                        ex.printStackTrace();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Dung lượng đã tồn tại !");
                 }
+
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                dlrBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    dlrBUS.delete(list.get(index), index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa dung lượng ram thành công");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -164,13 +178,19 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
                 if (Validation.isEmpty(ms.getText())) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập dung lượng Ram");
                 } else {
-                    int kichthuoc = Integer.parseInt(ms.getText());
-                    if (dlrBUS.checkDup(kichthuoc)) {
-                        dlrBUS.update(new DungLuongRamDTO(list.get(index).getMadlram(), kichthuoc));
-                        loadDataTable(list);
-                        ms.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Dung lượng đã tồn tại !");
+                    try {
+                        int kichthuoc = Integer.parseInt(ms.getText());
+                        if (dlrBUS.checkDup(kichthuoc)) {
+                            dlrBUS.update(new DungLuongRamDTO(list.get(index).getMadlram(), kichthuoc));
+                            loadDataTable(list);
+                            ms.setText("");
+                            JOptionPane.showMessageDialog(this, "Sửa dung lượng ram thành công");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Dung lượng đã tồn tại hoặc không có sự thay đổi!");
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -190,21 +210,29 @@ public final class DungLuongRamDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

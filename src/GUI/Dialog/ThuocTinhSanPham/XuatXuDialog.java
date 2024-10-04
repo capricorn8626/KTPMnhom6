@@ -100,7 +100,7 @@ public class XuatXuDialog extends JDialog implements MouseListener {
         scrollTable = new JScrollPane(table);
         scrollTable.setBackground(Color.WHITE);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã xuất xứ", "Nơi xuất xứ"};
+        String[] header = new String[] { "Mã xuất xứ", "Nơi xuất xứ" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -135,8 +135,8 @@ public class XuatXuDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<XuatXuDTO> result) {
         tblModel.setRowCount(0);
         for (XuatXuDTO ncc : result) {
-            tblModel.addRow(new Object[]{
-                ncc.getMaxuatxu(), ncc.getTenxuatxu()
+            tblModel.addRow(new Object[] {
+                    ncc.getMaxuatxu(), ncc.getTenxuatxu()
             });
         }
     }
@@ -147,22 +147,33 @@ public class XuatXuDialog extends JDialog implements MouseListener {
             if (Validation.isEmpty(ms.getText())) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập nơi xuất xứ mới");
             } else {
-                String tenmau = ms.getText();
-                if (msBUS.checkDup(tenmau)) {
-                    int id = XuatXuDAO.getInstance().getAutoIncrement();
-                    msBUS.add(new XuatXuDTO(id, tenmau));
-                    loadDataTable(list);
-                    ms.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Xuất xứ đã tồn tại !");
+                try {
+                    String tenmau = ms.getText();
+                    if (msBUS.checkDup(tenmau)) {
+                        int id = XuatXuDAO.getInstance().getAutoIncrement();
+                        msBUS.add(new XuatXuDTO(id, tenmau));
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm thành công");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Xuất xứ đã tồn tại !");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng");
                 }
             }
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                msBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    msBUS.delete(list.get(index), index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa thành công");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -170,13 +181,18 @@ public class XuatXuDialog extends JDialog implements MouseListener {
                 if (Validation.isEmpty(ms.getText())) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập nơi xuất xứ mới");
                 } else {
-                    String tenmau = ms.getText();
-                    if (msBUS.checkDup(tenmau)) {
-                        msBUS.update(new XuatXuDTO(list.get(index).getMaxuatxu(), tenmau));
-                        loadDataTable(list);
-                        ms.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Xuất xứ đã tồn tại !");
+                    try {
+                        String tenmau = ms.getText();
+                        if (msBUS.checkDup(tenmau)) {
+                            msBUS.update(new XuatXuDTO(list.get(index).getMaxuatxu(), tenmau));
+                            loadDataTable(list);
+                            ms.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Xuất xứ đã tồn tại !");
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -196,22 +212,30 @@ public class XuatXuDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 
     }
 }

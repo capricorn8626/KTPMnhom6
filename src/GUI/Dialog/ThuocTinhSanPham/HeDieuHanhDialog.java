@@ -97,7 +97,7 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
         table.addMouseListener(this);
         scrollTable = new JScrollPane(table);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã hệ điều hành", "Tên hệ điều hành"};
+        String[] header = new String[] { "Mã hệ điều hành", "Tên hệ điều hành" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -132,8 +132,8 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<HeDieuHanhDTO> result) {
         tblModel.setRowCount(0);
         for (HeDieuHanhDTO ncc : result) {
-            tblModel.addRow(new Object[]{
-                ncc.getMahdh(), ncc.getTenhdh()
+            tblModel.addRow(new Object[] {
+                    ncc.getMahdh(), ncc.getTenhdh()
             });
         }
     }
@@ -146,10 +146,16 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
             } else {
                 String tenmau = ms.getText();
                 if (msBUS.checkDup(tenmau)) {
-                    int id = HeDieuHanhDAO.getInstance().getAutoIncrement();
-                    msBUS.add(new HeDieuHanhDTO(id, tenmau));
-                    loadDataTable(list);
-                    ms.setText("");
+                    try {
+                        int id = HeDieuHanhDAO.getInstance().getAutoIncrement();
+                        msBUS.add(new HeDieuHanhDTO(id, tenmau));
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm hệ điều hành thành công !");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                        ex.printStackTrace();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Hệ điều hành đã tồn tại !");
                 }
@@ -158,9 +164,15 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                msBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    msBUS.delete(list.get(index), index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa hệ điều hành thành công !");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -170,9 +182,15 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
                 } else {
                     String tenmau = ms.getText();
                     if (msBUS.checkDup(tenmau)) {
-                        msBUS.update(new HeDieuHanhDTO(list.get(index).getMahdh(), tenmau));
-                        loadDataTable(list);
-                        ms.setText("");
+                        try {
+                            msBUS.update(new HeDieuHanhDTO(list.get(index).getMahdh(), tenmau));
+                            loadDataTable(list);
+                            ms.setText("");
+                            JOptionPane.showMessageDialog(this, "Sửa hệ điều hành thành công !");
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                            ex.printStackTrace();
+                        }
                     } else {
                         JOptionPane.showMessageDialog(this, "Hệ điều hành đã tồn tại !");
                     }
@@ -194,22 +212,30 @@ public class HeDieuHanhDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 
     }
 }

@@ -483,6 +483,12 @@ public final class SanPhamDialog extends JDialog implements ActionListener {
 
     public void eventAddSanPham() {
         SanPhamDTO sp = getInfo();
+        //kiem tra hinh anh
+        if (sp.getHinhanh() == null || sp.getHinhanh().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ảnh!!", "Thiếu thông tin", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         sp.setHinhanh(addImage(sp.getHinhanh()));
         if (jpSP.spBUS.add(sp, listch)) {
             JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công !");

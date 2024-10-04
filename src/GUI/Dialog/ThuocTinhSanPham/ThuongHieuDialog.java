@@ -89,7 +89,7 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
         table.setBackground(Color.WHITE);
         table.addMouseListener(this);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã thương hiệu", "Tên thương hiệu"};
+        String[] header = new String[] { "Mã thương hiệu", "Tên thương hiệu" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -126,8 +126,8 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<ThuongHieuDTO> result) {
         tblModel.setRowCount(0);
         for (ThuongHieuDTO th : result) {
-            tblModel.addRow(new Object[]{
-                th.getMathuonghieu(), th.getTenthuonghieu()
+            tblModel.addRow(new Object[] {
+                    th.getMathuonghieu(), th.getTenthuonghieu()
             });
         }
     }
@@ -140,10 +140,16 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
             } else {
                 String tenthuonghieu = ms.getText();
                 if (thBUS.checkDup(tenthuonghieu)) {
-                    int id = ThuongHieuDAO.getInstance().getAutoIncrement();
-                    thBUS.add(tenthuonghieu);
-                    loadDataTable(list);
-                    ms.setText("");
+                    try {
+                        int id = ThuongHieuDAO.getInstance().getAutoIncrement();
+                        thBUS.add(tenthuonghieu);
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm thương hiệu thành công !");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                        ex.printStackTrace();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Thương hiệu đã tồn tại !");
                 }
@@ -151,9 +157,15 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                thBUS.delete(list.get(index));
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    thBUS.delete(list.get(index));
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa thương hiệu thành công !");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -161,13 +173,19 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
                 if (Validation.isEmpty(ms.getText())) {
                     JOptionPane.showMessageDialog(this, "Vui lòng nhập tên thương hiệu mới");
                 } else {
-                    String tenthuonghieu = ms.getText();
-                    if (thBUS.checkDup(tenthuonghieu)) {
-                        thBUS.update(new ThuongHieuDTO(list.get(index).getMathuonghieu(), tenthuonghieu));
-                        loadDataTable(list);
-                        ms.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Thương hiệu đã tồn tại !");
+                    try {
+                        String tenthuonghieu = ms.getText();
+                        if (thBUS.checkDup(tenthuonghieu)) {
+                            thBUS.update(new ThuongHieuDTO(list.get(index).getMathuonghieu(), tenthuonghieu));
+                            loadDataTable(list);
+                            ms.setText("");
+                            JOptionPane.showMessageDialog(this, "Cập nhật thương hiệu thành công !");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Thương hiệu đã tồn tại !");
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -187,21 +205,29 @@ public final class ThuongHieuDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

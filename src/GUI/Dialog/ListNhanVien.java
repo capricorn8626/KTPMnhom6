@@ -124,7 +124,6 @@ public class ListNhanVien extends JDialog implements MouseListener {
     
     public void loadDataTalbe(ArrayList<DTO.NhanVienDTO> listnv) {
         tblModel.setRowCount(0);
-        System.out.println("size: "+listnv.size());
         for (DTO.NhanVienDTO nhanVien : listnv) {
             tblModel.addRow(new Object[]{
                 nhanVien.getManv(),nhanVien.getHoten(),nhanVien.getGioitinh()==1?"Nam":"Nữ",nhanVien.getNgaysinh(),nhanVien.getSdt(),nhanVien.getEmail()

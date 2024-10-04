@@ -87,7 +87,7 @@ public class MauSacDialog extends JDialog implements MouseListener {
         scrollTable = new JScrollPane(table);
         scrollTable.setBackground(Color.WHITE);
         tblModel = new DefaultTableModel();
-        String[] header = new String[]{"Mã màu", "Tên màu"};
+        String[] header = new String[] { "Mã màu", "Tên màu" };
         tblModel.setColumnIdentifiers(header);
         table.setModel(tblModel);
         scrollTable.setViewportView(table);
@@ -122,8 +122,8 @@ public class MauSacDialog extends JDialog implements MouseListener {
     public void loadDataTable(ArrayList<MauSacDTO> result) {
         tblModel.setRowCount(0);
         for (MauSacDTO ncc : result) {
-            tblModel.addRow(new Object[]{
-                ncc.getMamau(), ncc.getTenmau()
+            tblModel.addRow(new Object[] {
+                    ncc.getMamau(), ncc.getTenmau()
             });
         }
     }
@@ -136,10 +136,16 @@ public class MauSacDialog extends JDialog implements MouseListener {
             } else {
                 String tenmau = ms.getText();
                 if (msBUS.checkDup(tenmau)) {
-                    int id = MauSacDAO.getInstance().getAutoIncrement();
-                    msBUS.add(new MauSacDTO(id, tenmau));
-                    loadDataTable(list);
-                    ms.setText("");
+                    try {
+                        int id = MauSacDAO.getInstance().getAutoIncrement();
+                        msBUS.add(new MauSacDTO(id, tenmau));
+                        loadDataTable(list);
+                        ms.setText("");
+                        JOptionPane.showMessageDialog(this, "Thêm màu sắc thành công !");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                        ex.printStackTrace();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Màu sắc đã tồn tại !");
                 }
@@ -147,9 +153,15 @@ public class MauSacDialog extends JDialog implements MouseListener {
         } else if (e.getSource() == del) {
             int index = getRowSelected();
             if (index != -1) {
-                msBUS.delete(list.get(index), index);
-                loadDataTable(list);
-                ms.setText("");
+                try {
+                    msBUS.delete(list.get(index), index);
+                    loadDataTable(list);
+                    ms.setText("");
+                    JOptionPane.showMessageDialog(this, "Xóa màu sắc thành công !");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                    ex.printStackTrace();
+                }
             }
         } else if (e.getSource() == update) {
             int index = getRowSelected();
@@ -159,9 +171,15 @@ public class MauSacDialog extends JDialog implements MouseListener {
                 } else {
                     String tenmau = ms.getText();
                     if (msBUS.checkDup(tenmau)) {
-                        msBUS.update(new MauSacDTO(list.get(index).getMamau(), tenmau));
-                        loadDataTable(list);
-                        ms.setText("");
+                        try {
+                            msBUS.update(new MauSacDTO(list.get(index).getMamau(), tenmau));
+                            loadDataTable(list);
+                            ms.setText("");
+                            JOptionPane.showMessageDialog(this, "Cập nhật màu sắc thành công !");
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(this, "Có lỗi xảy ra !");
+                            ex.printStackTrace();
+                        }
                     } else {
                         JOptionPane.showMessageDialog(this, "Màu sắc đã tồn tại !");
                     }
@@ -183,21 +201,29 @@ public class MauSacDialog extends JDialog implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

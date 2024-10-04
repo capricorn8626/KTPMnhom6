@@ -44,6 +44,9 @@ import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -234,7 +237,11 @@ public final class TaoPhieuXuat extends JPanel {
         content_right_top.add(txtTenSp, BorderLayout.CENTER);
         content_right_top.add(panlePXGX, BorderLayout.SOUTH);
         cbxPhienBan.getCbb().addItemListener((ItemEvent e) -> {
-            mapb = ch.get(cbxPhienBan.getSelectedIndex()).getMaphienbansp();
+            int row = cbxPhienBan.getSelectedIndex();
+            if (row < 0) {
+                return;
+            }
+            mapb = ch.get(row).getMaphienbansp();
             setImeiByPb(mapb);
             if (checkTonTai()) {
                 actionbtn("update");
@@ -488,8 +495,9 @@ public final class TaoPhieuXuat extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 int index = tableSanPham.getSelectedRow();
+                int masp = Integer.parseInt(tableSanPham.getValueAt(index, 0).toString());
                 if (index != -1) {
-                    setInfoSanPham(listSP.get(index));
+                    setInfoSanPham(spBUS.getByMaSP(masp));
                 }
                 if (!checkTonTai()) {
                     actionbtn("add");
@@ -554,6 +562,8 @@ public final class TaoPhieuXuat extends JPanel {
     public void loadDataTalbeSanPham(ArrayList<DTO.SanPhamDTO> result) {
         tblModelSP.setRowCount(0);
         for (DTO.SanPhamDTO sp : result) {
+            if (sp.getSoluongton() <= 0)
+                continue;
             tblModelSP.addRow(new Object[]{sp.getMasp(), sp.getTensp(), sp.getSoluongton()});
         }
     }
@@ -562,15 +572,7 @@ public final class TaoPhieuXuat extends JPanel {
         this.txtMaSp.setText(Integer.toString(sp.getMasp()));
         this.txtTenSp.setText(sp.getTensp());
         this.textAreaImei.setText("");
-        ch = phienBanBus.getAll(sp.getMasp());
-        int size = ch.size();
-        String[] arr = new String[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = romBus.getKichThuocById(ch.get(i).getRom()) + "GB - "
-                    + ramBus.getKichThuocById(ch.get(i).getRam()) + "GB - " + mausacBus.getTenMau(ch.get(i).getMausac());
-        }
-        this.cbxPhienBan.setArr(arr);
-        mapb = ch.get(0).getMaphienbansp();
+        loadCbxPhienBan(sp);
         setImeiByPb(mapb);
     }
 
@@ -620,7 +622,11 @@ public final class TaoPhieuXuat extends JPanel {
 
     public boolean checkTonTai() {
         boolean check = false;
-        int pb = ch.get(cbxPhienBan.getSelectedIndex()).getMaphienbansp();
+        int row = cbxPhienBan.getSelectedIndex();
+        if (row < 0) {
+            return false;
+        }
+        int pb = ch.get(row).getMaphienbansp();
         for (ChiTietPhieuDTO chiTietPhieu : chitietphieu) {
             if (chiTietPhieu.getMaphienbansp() == pb) {
                 return true;
@@ -671,5 +677,22 @@ public final class TaoPhieuXuat extends JPanel {
         SanPhamDTO spSel = spBUS.getSp(ctphieu.getMaphienbansp());
         setInfoSanPham(spSel);
         cbxPhienBan.setSelectedItem(ctphieu.getMaphienbansp() + "");
+    }
+
+    public void loadCbxPhienBan(SanPhamDTO sp) {
+        cbxPhienBan.getCbb().removeAllItems();
+        ch.clear();
+        ch.addAll(0, phienBanBus.getAll(sp.getMasp()).stream().filter((pb) -> pb.getSoluongton() > 0).collect(Collectors.toList()));
+        int size = ch.size();
+        if (size < 0) {
+            return;
+        }
+        String[] arr = new String[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = romBus.getKichThuocById(ch.get(i).getRom()) + "GB - "
+                    + ramBus.getKichThuocById(ch.get(i).getRam()) + "GB - " + mausacBus.getTenMau(ch.get(i).getMausac());
+        }
+        this.cbxPhienBan.setArr(arr);
+        mapb = ch.get(0).getMaphienbansp();
     }
 }
