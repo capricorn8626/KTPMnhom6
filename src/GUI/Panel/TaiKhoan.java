@@ -208,6 +208,8 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                 if (input == 0) {
                     TaiKhoanDAO.getInstance().delete(listTk.get(index).getManv() + "");
                     loadTable(taiKhoanBus.getTaiKhoanAll());
+                    JOptionPane.showMessageDialog(this, "Xóa tài khoản thành công", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         } else if (e.getSource() == mainFunction.btn.get("detail")) {
