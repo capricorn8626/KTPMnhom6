@@ -123,6 +123,9 @@ public class TaiKhoanDialog extends JDialog {
         btnCapNhat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (validateInput() == false)
+                    return;
+
                 if (!(username.getText().length() == 0)) {
                     String tendangnhap = username.getText();
                     String pass = BCrypt.hashpw(password.getPass(), BCrypt.gensalt(12));
@@ -195,8 +198,19 @@ public class TaiKhoanDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Mật khẩu ít nhất 6 ký tự");
             return false;
         }
-        if (taiKhoan.taiKhoanBus.checkDupUsername(username.getText())) {
+        if (checkChangedUsername() && taiKhoan.taiKhoanBus.checkDupUsername(username.getText())) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkChangedUsername() {
+        int index = taiKhoan.taiKhoanBus.getTaiKhoanByMaNV(manv);
+        if (manv <= 0 || index == -1)
+            return false;
+        TaiKhoanDTO tk = taiKhoan.taiKhoanBus.getTaiKhoan(index);
+        if (tk.getUsername().equals(username.getText())) {
             return false;
         }
         return true;

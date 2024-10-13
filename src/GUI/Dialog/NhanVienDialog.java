@@ -151,29 +151,27 @@ public class NhanVienDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     if (ValidationInput()) {
-                        if (checkEmail(email.getText())) {
-                            try {
-                                int txt_gender = -1;
-                                if (male.isSelected()) {
-                                    txt_gender = 1;
-                                } else if (female.isSelected()) {
-                                    txt_gender = 0;
-                                }
-                                int manv = NhanVienDAO.getInstance().getAutoIncrement();
-                                String txtName = name.getText();
-                                String txtSdt = sdt.getText();
-                                String txtEmail = email.getText();
-                                Date birthDay = jcBd.getDate();
-                                java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
-                                NhanVienDTO nV = new NhanVienDTO(manv, txtName, txt_gender, sqlDate, txtSdt, 1,
-                                        txtEmail);
-                                NhanVienDAO.getInstance().insert(nV);
-                                nv.insertNv(nV);
-                                nv.loadTable();
-                                dispose();
-                            } catch (ParseException ex) {
-                                Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        try {
+                            int txt_gender = -1;
+                            if (male.isSelected()) {
+                                txt_gender = 1;
+                            } else if (female.isSelected()) {
+                                txt_gender = 0;
                             }
+                            int manv = NhanVienDAO.getInstance().getAutoIncrement();
+                            String txtName = name.getText();
+                            String txtSdt = sdt.getText();
+                            String txtEmail = email.getText();
+                            Date birthDay = jcBd.getDate();
+                            java.sql.Date sqlDate = new java.sql.Date(birthDay.getTime());
+                            NhanVienDTO nV = new NhanVienDTO(manv, txtName, txt_gender, sqlDate, txtSdt, 1,
+                                    txtEmail);
+                            NhanVienDAO.getInstance().insert(nV);
+                            nv.insertNv(nV);
+                            nv.loadTable();
+                            dispose();
+                        } catch (ParseException ex) {
+                            Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 } catch (ParseException ex) {
@@ -266,14 +264,6 @@ public class NhanVienDialog extends JDialog {
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        if (nv.checkPhoneNumberDup(sdt.getText())) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng trong hệ thống!");
-            return false;
-        }
-        if (nv.checkEmailDup(email.getText())) {
-            JOptionPane.showMessageDialog(this, "Email này đã được sử dụng trong hệ thống!");
-            return false;
-        }
         if (jcBd.getDate() == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh!");
             return false;
@@ -285,28 +275,39 @@ public class NhanVienDialog extends JDialog {
         // Tính tuổi
         Calendar birthDate = Calendar.getInstance();
         birthDate.setTime(jcBd.getDate());
-
         Calendar today = Calendar.getInstance();
         int age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
-
-        // Điều chỉnh nếu chưa đủ sinh nhật trong năm nay
         if (today.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH) ||
                 (today.get(Calendar.MONTH) == birthDate.get(Calendar.MONTH)
                         && today.get(Calendar.DAY_OF_MONTH) < birthDate.get(Calendar.DAY_OF_MONTH))) {
             age--;
         }
-
         if (age < 18) {
             JOptionPane.showMessageDialog(this, "Nhân viên phải đủ 18 tuổi trở lên!");
+            return false;
+        }
+        // check duplicate
+        if (nv.checkEmailDup(email.getText()) && checkChangedEmail()) {
+            JOptionPane.showMessageDialog(this, "Email này đã được sử dụng trong hệ thống!");
+            return false;
+        }
+        if (nv.checkPhoneNumberDup(sdt.getText()) && checkChangedSdt()) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại này đã được sử dụng trong hệ thống!");
             return false;
         }
 
         return true;
     }
 
-    public boolean checkEmail(String email) {
-        if (!(NhanVienDAO.getInstance().selectByEmail(email) == null)) {
-            JOptionPane.showMessageDialog(this, "Tài khoản email này đã được sử dụng trong hệ thống!");
+    public boolean checkChangedSdt() {
+        if (nhanVien != null && nhanVien.getSdt().equals(sdt.getText())) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkChangedEmail() {
+        if (nhanVien != null && nhanVien.getEmail().equals(email.getText())) {
             return false;
         }
         return true;
