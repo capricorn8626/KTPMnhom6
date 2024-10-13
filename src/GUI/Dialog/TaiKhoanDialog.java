@@ -93,7 +93,7 @@ public class TaiKhoanDialog extends JDialog {
         btnThem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (validateInput()) {
+                if (validateInput("create")) {
                     String tendangnhap = username.getText();
                     int check = 0;
                     for (TaiKhoanDTO i : listTK) {
@@ -110,6 +110,7 @@ public class TaiKhoanDialog extends JDialog {
                         TaiKhoanDAO.getInstance().insert(tk);
                         taiKhoan.taiKhoanBus.addAcc(tk);
                         taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAll());
+                        JOptionPane.showMessageDialog(null, "Thêm tài khoản thành công");
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!",
@@ -123,7 +124,7 @@ public class TaiKhoanDialog extends JDialog {
         btnCapNhat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (validateInput() == false)
+                if (validateInput("update") == false)
                     return;
 
                 if (!(username.getText().length() == 0)) {
@@ -135,6 +136,7 @@ public class TaiKhoanDialog extends JDialog {
                     TaiKhoanDAO.getInstance().update(tk);
                     taiKhoan.taiKhoanBus.updateAcc(taiKhoan.getRowSelected(), tk);
                     taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAll());
+                    JOptionPane.showMessageDialog(null, "Cập nhật thành công");
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Vui lòng không để trống tên");
@@ -181,31 +183,32 @@ public class TaiKhoanDialog extends JDialog {
         return listNhomQuyen;
     }
 
-    public boolean validateInput() {
-        if (username.getText().trim().length() == 0) {
+    public boolean validateInput(String type) {
+        if (username.getText().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng không để trống tên đăng nhập");
             return false;
         }
-        if (username.getText().length() < 6) {
-            JOptionPane.showMessageDialog(this, "Tên đăng nhập ít nhất 6 kí tự");
+        if (username.getText().length() < 6 || username.getText().length() > 30) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập từ 6 đến 30 kí tự");
             return false;
         }
         if (password.getPass().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng không để trống mật khẩu");
             return false;
         }
-        if (password.getPass().length() < 6) {
-            JOptionPane.showMessageDialog(this, "Mật khẩu ít nhất 6 ký tự");
+        if (!type.equals("update") && (password.getPass().length() < 6 || password.getPass().length() > 30)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu từ 6 đến 30 kí tự");
+            System.out.println(password.getPass());
             return false;
         }
-        if (checkChangedUsername() && taiKhoan.taiKhoanBus.checkDupUsername(username.getText())) {
+        if (isUsernameChanged() && taiKhoan.taiKhoanBus.checkDupUsername(username.getText())) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại");
             return false;
         }
         return true;
     }
 
-    public boolean checkChangedUsername() {
+    public boolean isUsernameChanged() {
         int index = taiKhoan.taiKhoanBus.getTaiKhoanByMaNV(manv);
         if (manv <= 0 || index == -1)
             return false;

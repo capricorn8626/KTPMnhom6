@@ -377,6 +377,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     int id = NhanVienDAO.getInstance().getAutoIncrement();
                     String tennv = excelRow.getCell(0).getStringCellValue();
                     String gioitinh = excelRow.getCell(1).getStringCellValue();
+
                     if (gioitinh.equals("Nam") || gioitinh.equals("nam")) {
                         gt = 1;
                     } else {
@@ -386,7 +387,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     String sdt = excelRow.getCell(3).getStringCellValue();
                     String email = excelRow.getCell(4).getStringCellValue();
                     // check trung sdt va email
-                    if (checkPhoneNumberDup(sdt) || checkEmailDup(email)) {
+                    if (checkPhoneNumberDup(sdt) || checkEmailDup(email) || !isValidName(tennv)) {
                         check = 0;
                     }
                     java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
@@ -432,5 +433,13 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
             return str.matches("\\(\\d{3}\\)\\d{3}-\\d{4}"); // Kiểm tra số điện thoại có dấu ngoặc đơn
         } // Trả về false nếu chuỗi không phải là số điện thoại hợp lệ
 
+    }
+
+    public boolean isValidName(String name) {
+        // check length
+        if (name.length() < 6 || name.length() > 30) {
+            return false;
+        }
+        return name.matches("^[a-zA-Z\\s]+");
     }
 }

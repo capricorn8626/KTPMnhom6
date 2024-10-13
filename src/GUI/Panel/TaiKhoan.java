@@ -255,16 +255,13 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                     Cell cell0 = excelRow.getCell(0);
                     int manv = (int) excelRow.getCell(0).getNumericCellValue();
                     String tendangnhap = excelRow.getCell(1).getStringCellValue();
-                    // check trùng tên đăng nhập
-                    if (checkDupUsername(tendangnhap)) {
+
+                    if (isValidUsername(tendangnhap) == false && checkDupUsername(tendangnhap)
+                            && taiKhoanBus.getTaiKhoanByMaNV(manv) != -1) {
                         k += 1;
                         continue;
                     }
-                    // check co ton tai tai khoan voi ma nhan vien nay chua
-                    if (taiKhoanBus.getTaiKhoanByMaNV(manv) != -1) {
-                        k += 1;
-                        continue;
-                    }
+
                     String matkhau = excelRow.getCell(2).getStringCellValue();
                     String nhomquyen = excelRow.getCell(3).getStringCellValue();
                     int check1 = 0, check2 = 0, check3 = 0, check4 = 0;
@@ -366,6 +363,24 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
             }
         }
         return false;
+    }
+
+    public boolean isValidUsername(String name) {
+        // check do dai ten dang nhap
+        if (name.length() < 6 || name.length() > 30) {
+            return false;
+        }
+        // check ky tu dac biet
+        return name.matches("^[a-zA-Z0-9]*$");
+    }
+
+    public boolean isValidPassword(String pass) {
+        // check do dai mat khau
+        if (pass.length() < 6 || pass.length() > 30) {
+            return false;
+        }
+
+        return true;
     }
 
 }

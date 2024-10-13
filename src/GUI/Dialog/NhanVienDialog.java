@@ -176,6 +176,7 @@ public class NhanVienDialog extends JDialog {
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(NhanVienDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
                 }
             }
         });
@@ -253,8 +254,8 @@ public class NhanVienDialog extends JDialog {
                     JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        if (name.getText().length() < 6) {
-            JOptionPane.showMessageDialog(this, "Tên nhân viên ít nhất 6 kí tự!");
+        if (name.getText().length() < 6 || name.getText().length() > 30) {
+            JOptionPane.showMessageDialog(this, "Tên nhân viên từ 6 đến 30 kí tự!");
             return false;
         }
         if (Validation.isEmpty(email.getText()) || !Validation.isEmail(email.getText())) {
