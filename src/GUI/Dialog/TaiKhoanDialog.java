@@ -78,7 +78,7 @@ public class TaiKhoanDialog extends JDialog {
         username = new InputForm("Tên đăng nhập");
         password = new InputForm("Mật khẩu", "password");
         maNhomQuyen = new SelectForm("Nhóm quyền", getNhomQuyen());
-        trangthai = new SelectForm("Trạng thái", new String[]{"Ngưng hoạt động", "Hoạt động"});
+        trangthai = new SelectForm("Trạng thái", new String[] { "Ngưng hoạt động", "Hoạt động" });
         pnmain.add(username);
         pnmain.add(password);
         pnmain.add(maNhomQuyen);
@@ -112,7 +112,8 @@ public class TaiKhoanDialog extends JDialog {
                         taiKhoan.loadTable(taiKhoan.taiKhoanBus.getTaiKhoanAll());
                         dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!", "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Tên tài khoản đã tồn tại. Vui lòng đổi tên khác!",
+                                "Cảnh báo!", JOptionPane.WARNING_MESSAGE);
                         username.getFocusCycleRootAncestor();
                     }
 
@@ -155,7 +156,7 @@ public class TaiKhoanDialog extends JDialog {
             case "view" -> {
                 pnmain.remove(password);
                 username.setEditable(false);
-//                password.setEditable(false);
+                // password.setEditable(false);
                 maNhomQuyen.setDisable();
                 trangthai.setDisable();
                 this.setSize(new Dimension(500, 550));
@@ -178,17 +179,24 @@ public class TaiKhoanDialog extends JDialog {
     }
 
     public boolean validateInput() {
-        if (username.getText().length() == 0) {
+        if (username.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng không để trống tên đăng nhập");
             return false;
-        } else if (username.getText().length() < 6) {
+        }
+        if (username.getText().length() < 6) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập ít nhất 6 kí tự");
             return false;
-        } else if (password.getPass().length() == 0) {
+        }
+        if (password.getPass().length() == 0) {
             JOptionPane.showMessageDialog(this, "Vui lòng không để trống mật khẩu");
             return false;
-        } else if (password.getPass().length() < 6) {
+        }
+        if (password.getPass().length() < 6) {
             JOptionPane.showMessageDialog(this, "Mật khẩu ít nhất 6 ký tự");
+            return false;
+        }
+        if (taiKhoan.taiKhoanBus.checkDupUsername(username.getText())) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại");
             return false;
         }
         return true;

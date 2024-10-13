@@ -84,11 +84,9 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         }
         return vitri;
     }
-    
-    
-    
+
     public String getNameById(int manv) {
-        return nhanVienDAO.selectById(manv+"").getHoten();
+        return nhanVienDAO.selectById(manv + "").getHoten();
     }
 
     public String[] getArrTenNhanVien() {
@@ -112,7 +110,8 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                 if (index < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
                 } else {
-                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Sửa nhân viên", "update", nv.getNhanVien());
+                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Sửa nhân viên", "update",
+                            nv.getNhanVien());
                 }
             }
             case "XÓA" -> {
@@ -126,14 +125,16 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                 if (nv.getRow() < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
                 } else {
-                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Xem nhân viên", "detail", nv.getNhanVien());
+                    NhanVienDialog nvsua = new NhanVienDialog(this, nv.owner, true, "Xem nhân viên", "detail",
+                            nv.getNhanVien());
                 }
             }
             case "NHẬP EXCEL" -> {
                 importExcel();
             }
             case "XUẤT EXCEL" -> {
-                String[] header = new String[]{"MãNV", "Tên nhân viên", "Email nhân viên", "Số điên thoại", "Giới tính", "Ngày sinh"};
+                String[] header = new String[] { "MãNV", "Tên nhân viên", "Email nhân viên", "Số điên thoại",
+                        "Giới tính", "Ngày sinh" };
                 exportExcel(listNv, header);
             }
         }
@@ -164,7 +165,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-//        System.out.println("Text field changed: " + textField.getText());
+        // System.out.println("Text field changed: " + textField.getText());
     }
 
     public void insertNv(NhanVienDTO nv) {
@@ -254,8 +255,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
             }
             case "Email" -> {
                 for (NhanVienDTO i : this.listNv) {
-                    if (i.getEmail().toLowerCase().contains(text)
-                           ) {
+                    if (i.getEmail().toLowerCase().contains(text)) {
                         result.add(i);
                     }
                 }
@@ -265,6 +265,24 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         }
 
         return result;
+    }
+
+    public boolean checkPhoneNumberDup(String sdt) {
+        for (NhanVienDTO nv : listNv) {
+            if (nv.getSdt().equals(sdt)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkEmailDup(String email) {
+        for (NhanVienDTO nv : listNv) {
+            if (nv.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void writeHeader(String[] list, Sheet sheet, int rowIndex) {
@@ -304,7 +322,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
             // DataFormat df = workbook.createDataFormat();
             // short format = df.getFormat("#,##0");
 
-            //Create CellStyle
+            // Create CellStyle
             Workbook workbook = row.getSheet().getWorkbook();
             cellStyleFormatNumber = workbook.createCellStyle();
             cellStyleFormatNumber.setDataFormat(format);
@@ -401,7 +419,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
             return true;
         } else {
             return str.matches("\\(\\d{3}\\)\\d{3}-\\d{4}"); // Kiểm tra số điện thoại có dấu ngoặc đơn
-        }        // Trả về false nếu chuỗi không phải là số điện thoại hợp lệ
+        } // Trả về false nếu chuỗi không phải là số điện thoại hợp lệ
 
     }
 }
