@@ -256,8 +256,8 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                     int manv = (int) excelRow.getCell(0).getNumericCellValue();
                     String tendangnhap = excelRow.getCell(1).getStringCellValue();
 
-                    if (isValidUsername(tendangnhap) == false && checkDupUsername(tendangnhap)
-                            && taiKhoanBus.getTaiKhoanByMaNV(manv) != -1) {
+                    if (isValidUsername(tendangnhap) == false || isDupUsername(tendangnhap)
+                            || taiKhoanBus.getTaiKhoanByMaNV(manv) != -1) {
                         k += 1;
                         continue;
                     }
@@ -356,7 +356,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         loadTable(listTk);
     }
 
-    public boolean checkDupUsername(String username) {
+    public boolean isDupUsername(String username) {
         for (TaiKhoanDTO i : listTk) {
             if (i.getUsername().equals(username)) {
                 return true;
@@ -370,8 +370,7 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         if (name.length() < 6 || name.length() > 30) {
             return false;
         }
-        // check ky tu dac biet
-        return name.matches("^[a-zA-Z0-9]*$");
+        return true;
     }
 
     public boolean isValidPassword(String pass) {

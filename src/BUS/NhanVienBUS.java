@@ -388,6 +388,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     String email = excelRow.getCell(4).getStringCellValue();
                     // check trung sdt va email
                     if (checkPhoneNumberDup(sdt) || checkEmailDup(email) || !isValidName(tennv)) {
+                        System.out.println("Trung sdt hoac email hoac ten khong hop le");
                         check = 0;
                     }
                     java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
@@ -440,6 +441,6 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         if (name.length() < 6 || name.length() > 30) {
             return false;
         }
-        return name.matches("^[a-zA-Z\\s]+");
+        return true;
     }
 }
