@@ -233,6 +233,7 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     openFile(saveFile.toString());
                 }
             }
+            JOptionPane.showMessageDialog(null, "Xuất file thành công");
         } catch (Exception e) {
             e.printStackTrace();
         }

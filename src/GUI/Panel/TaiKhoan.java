@@ -220,8 +220,11 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
         } else if (e.getSource() == mainFunction.btn.get("export")) {
             try {
                 JTableExporter.exportJTableToExcel(tableTaiKhoan);
+                JOptionPane.showMessageDialog(this, "Xuất file thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 Logger.getLogger(TaiKhoan.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Xuất file thất bại, kiểm tra file có đang được chỉnh sửa không!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == mainFunction.btn.get("import")) {
             importExcel();
@@ -314,19 +317,38 @@ public class TaiKhoan extends JPanel implements ActionListener, ItemListener {
                         listTk.add(newaccount);
                     }
                 }
-                JOptionPane.showMessageDialog(this,
-                        "Nhập thành công, " + k + " dòng dữ liệu không chuẩn không được thêm vào", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                if (k != 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Nhập thành công, " + k + " dòng dữ liệu không chuẩn không được thêm vào!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Nhập thành công, toàn bộ được thêm vào!", "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Lỗi file không tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (NumberFormatException | IllegalStateException e) {
                 JOptionPane.showMessageDialog(this, "Nhập dữ liệu thất bại do dữ liệu sai định dạng!", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (excelFIS != null) {
+                        excelFIS.close();
+                    }
+                    if (excelBIS != null) {
+                        excelBIS.close();
+                    }
+                    if (excelJTableImport != null) {
+                        excelJTableImport.close();
+                    }
+                    loadTable(listTk);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        loadTable(listTk);
     }
 
     @Override
