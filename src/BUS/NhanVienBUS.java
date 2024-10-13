@@ -118,7 +118,12 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                 if (nv.getRow() < 0) {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xóa");
                 } else {
-                    deleteNv(nv.getNhanVien());
+                    int dialogButton = JOptionPane.YES_NO_OPTION;
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa nhân viên này?",
+                            "Warning", dialogButton);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        deleteNv(nv.getNhanVien());
+                    }
                 }
             }
             case "CHI TIẾT" -> {
@@ -379,6 +384,10 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                     Date ngaysinh = (Date) excelRow.getCell(2).getDateCellValue();
                     String sdt = excelRow.getCell(3).getStringCellValue();
                     String email = excelRow.getCell(4).getStringCellValue();
+                    // check trung sdt va email
+                    if (checkPhoneNumberDup(sdt) || checkEmailDup(email)) {
+                        check = 0;
+                    }
                     java.sql.Date birth = new java.sql.Date(ngaysinh.getTime());
 
                     if (Validation.isEmpty(tennv) || Validation.isEmpty(email)
@@ -396,7 +405,6 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
                         nv.loadDataTalbe(listNv);
                     }
                 }
-
             } catch (IOException | IllegalStateException e) {
                 JOptionPane.showMessageDialog(null, "Nhập thất bại", "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
@@ -404,7 +412,9 @@ public class NhanVienBUS implements ActionListener, DocumentListener {
         }
         JOptionPane.showMessageDialog(null, "Nhập thành công");
         if (k != 0) {
-            JOptionPane.showMessageDialog(null, "Những dữ liệu không chuẩn không được thêm vào");
+            JOptionPane.showMessageDialog(null, k
+                    + " dòng dữ liệu không chuẩn không được thêm vào, có thể do trùng sđt hoặc email hoặc dữ liệu không hợp lệ",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }
 

@@ -220,8 +220,11 @@ public class NhanVienDialog extends JDialog {
         switch (type) {
             case "create" ->
                 bottom.add(btnAdd);
-            case "update" ->
+            case "update" -> {
+                name.setDisable();
                 bottom.add(btnEdit);
+            }
+
             case "detail" -> {
                 name.setDisable();
                 sdt.setDisable();
